@@ -11,20 +11,21 @@ namespace ExtendedMap.Android
 {
     public class ExtendedMapRenderer : MapRenderer, IOnMapReadyCallback
     {
-        private GoogleMap _map;
+        public ExtendedMapRenderer(Context context) : base(context)
+        { }
 
-        public void OnMapReady(GoogleMap googleMap)
+        public void OnMapReady(GoogleMap map)
         {
-            _map = googleMap;
+            base.OnMapReady(map);
             if (_map != null)
-                _map.MapClick += googleMap_MapClick;
+                NativeMap.MapClick += googleMap_MapClick;
         }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<View> e)
+        protected override void OnElementChanged(ElementChangedEventArgs<Map> e)
         {
-            if (_map != null)
-                _map.MapClick -= googleMap_MapClick;
             base.OnElementChanged(e);
+            if (e.OldElement != null)
+                NativeMap.MapClick -= googleMap_MapClick;
             if (Control != null)
                 ((MapView) Control).GetMapAsync(this);
         }
